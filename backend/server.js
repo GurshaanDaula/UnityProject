@@ -2,6 +2,10 @@ import app from "./app.js";
 import dotenv from "dotenv";
 import express from "express";
 
+const express = require("express");
+const app = require("./app");
+
+
 dotenv.config();
 
 // FIX UNITY WEBGL MIME TYPES + BROTLI HEADERS

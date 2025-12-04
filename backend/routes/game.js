@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../db"); // your MySQL pool/connection
+const db = require("../db");
 
+// GET progress
 router.get("/progress", async (req, res) => {
     const { username } = req.query;
 
@@ -15,7 +16,6 @@ router.get("/progress", async (req, res) => {
         );
 
         if (rows.length === 0) {
-            // Create default row if new player
             await db.query(
                 `INSERT INTO player_progress 
                 (username, level, xp, xp_to_next, max_hp, max_mana, bonus_attack, bonus_health, bonus_mana, current_villain)
@@ -48,6 +48,7 @@ router.get("/progress", async (req, res) => {
     }
 });
 
+// POST progress
 router.post("/progress", async (req, res) => {
     const data = req.body;
 
@@ -92,3 +93,5 @@ router.post("/progress", async (req, res) => {
     }
 });
 
+// ⭐ THIS IS THE IMPORTANT FIX
+module.exports = router;

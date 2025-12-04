@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import MongoStore from "connect-mongo";
 
 import authRoutes from "./routes/auth.js";
-import gameRoutes from "./routes/game.js";
+const gameRoutes = require("./routes/game.js");
 
 dotenv.config();
 
