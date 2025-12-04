@@ -1,5 +1,5 @@
 import express from "express";
-import db from "../db.js";   // must export default
+import db from "../config/db.js";
 const router = express.Router();
 
 // GET progress

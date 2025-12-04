@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-import { pool } from "../config/db.js";
+import pool from "../config/db.js";
 
 // password validation
 function validatePassword(pw) {
