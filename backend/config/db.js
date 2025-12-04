@@ -13,3 +13,5 @@ export const pool = mysql.createPool({
         ca: fs.readFileSync("./certificates/ca.pem"),
     }
 });
+
+export default pool;

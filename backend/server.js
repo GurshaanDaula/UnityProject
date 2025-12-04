@@ -1,13 +1,12 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const app = require("./app");
+import express from "express";
+import dotenv from "dotenv";
+import app from "./app.js";
 
 dotenv.config();
 
 // FIX UNITY WEBGL MIME TYPES + BROTLI HEADERS
 app.use((req, res, next) => {
     if (req.url.endsWith(".br")) {
-
         if (req.url.endsWith(".js.br")) {
             res.setHeader("Content-Type", "application/javascript");
         } else if (req.url.endsWith(".wasm.br")) {

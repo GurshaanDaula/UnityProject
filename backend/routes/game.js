@@ -1,6 +1,6 @@
-const express = require("express");
+import express from "express";
+import db from "../db.js";   // must export default
 const router = express.Router();
-const db = require("../db");
 
 // GET progress
 router.get("/progress", async (req, res) => {
@@ -93,5 +93,4 @@ router.post("/progress", async (req, res) => {
     }
 });
 
-// ⭐ THIS IS THE IMPORTANT FIX
-module.exports = router;
+export default router;
