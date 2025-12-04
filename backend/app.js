@@ -1,10 +1,11 @@
-import express from "express";
-import session from "express-session";
-import cors from "cors";
-import dotenv from "dotenv";
-import MongoStore from "connect-mongo";
+const express = require("express");
+const session = require("express-session");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const MongoStore = require("connect-mongo");
 
-import authRoutes from "./routes/auth.js";
+// Convert ES imports to CommonJS
+const authRoutes = require("./routes/auth.js");
 const gameRoutes = require("./routes/game.js");
 
 dotenv.config();
@@ -14,10 +15,10 @@ const app = express();
 // JSON parser
 app.use(express.json());
 
-// CORS for Unity WebGL
+// CORS
 app.use(
     cors({
-        origin: ["http://localhost:5173", "https://your-github-pages-url"],
+        origin: ["http://localhost:5173"],
         credentials: true,
     })
 );
@@ -36,7 +37,7 @@ app.use(
         }),
         cookie: {
             httpOnly: true,
-            secure: false, // set true in production HTTPS
+            secure: false, // set true in production
             sameSite: "lax",
         },
     })
@@ -46,4 +47,4 @@ app.use(
 app.use("/auth", authRoutes);
 app.use("/game", gameRoutes);
 
-export default app;
+module.exports = app;
