@@ -19,14 +19,14 @@ app.use((req, res, next) => {
 
         res.setHeader("Content-Encoding", "br");
     }
+
     next();
 });
 
-// Serve Unity Build
+// SERVE UNITY WEBGL BUILD
 app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3001;
-
 app.listen(PORT, () => {
     console.log(`🔥 DBZ Battle API running on port ${PORT}`);
 });
