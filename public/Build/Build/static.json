@@ -1,0 +1,35 @@
+{
+    "enable": {
+        "brotli": true,
+        "gzip": true
+    },
+    "headers": {
+        "/**": {
+            "Access-Control-Allow-Origin": "*"
+        },
+        "/**/*.js.br": {
+            "Content-Type": "application/javascript",
+            "Content-Encoding": "br"
+        },
+        "/**/*.wasm.br": {
+            "Content-Type": "application/wasm",
+            "Content-Encoding": "br"
+        },
+        "/**/*.data.br": {
+            "Content-Type": "application/octet-stream",
+            "Content-Encoding": "br"
+        },
+        "/**/*.js.gz": {
+            "Content-Type": "application/javascript",
+            "Content-Encoding": "gzip"
+        },
+        "/**/*.wasm.gz": {
+            "Content-Type": "application/wasm",
+            "Content-Encoding": "gzip"
+        },
+        "/**/*.data.gz": {
+            "Content-Type": "application/octet-stream",
+            "Content-Encoding": "gzip"
+        }
+    }
+}
