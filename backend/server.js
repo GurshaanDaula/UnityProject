@@ -1,32 +1,30 @@
 import express from "express";
-import dotenv from "dotenv";
 import app from "./app.js";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
-// FIX UNITY WEBGL MIME TYPES + BROTLI HEADERS
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Fix Brotli MIME
 app.use((req, res, next) => {
     if (req.url.endsWith(".br")) {
-        if (req.url.endsWith(".js.br")) {
-            res.setHeader("Content-Type", "application/javascript");
-        } else if (req.url.endsWith(".wasm.br")) {
-            res.setHeader("Content-Type", "application/wasm");
-        } else if (req.url.endsWith(".data.br")) {
-            res.setHeader("Content-Type", "application/octet-stream");
-        } else if (req.url.endsWith(".json.br")) {
-            res.setHeader("Content-Type", "application/json");
-        }
-
+        if (req.url.includes(".js")) res.setHeader("Content-Type", "application/javascript");
+        if (req.url.includes(".wasm")) res.setHeader("Content-Type", "application/wasm");
+        if (req.url.includes(".data")) res.setHeader("Content-Type", "application/octet-stream");
         res.setHeader("Content-Encoding", "br");
     }
-
     next();
 });
 
-// SERVE UNITY WEBGL BUILD
-app.use(express.static("public"));
+// Serve Unity build
+app.use(express.static(path.join(__dirname, "public")));
 
 const PORT = process.env.PORT || 3001;
+
 app.listen(PORT, () => {
-    console.log(`🔥 DBZ Battle API running on port ${PORT}`);
+    console.log(`🔥 Backend running on port ${PORT}`);
 });
