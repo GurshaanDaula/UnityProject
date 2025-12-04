@@ -1,11 +1,14 @@
 import app from "./app.js";
 import dotenv from "dotenv";
+import express from "express";
+
 dotenv.config();
-app.use(express.static("public"));
 
 // FIX UNITY WEBGL MIME TYPES + BROTLI HEADERS
 app.use((req, res, next) => {
     if (req.url.endsWith(".br")) {
+
+        // correct MIME types
         if (req.url.endsWith(".js.br")) {
             res.setHeader("Content-Type", "application/javascript");
         } else if (req.url.endsWith(".wasm.br")) {
@@ -16,10 +19,14 @@ app.use((req, res, next) => {
             res.setHeader("Content-Type", "application/json");
         }
 
+        // tell browser to decompress it
         res.setHeader("Content-Encoding", "br");
     }
     next();
 });
+
+// MUST COME AFTER FIX
+app.use(express.static("public"));
 
 const PORT = process.env.PORT || 3001;
 
