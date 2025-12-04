@@ -1,100 +1,94 @@
-import express from "express";
-import { pool } from "../config/db.js";
-
+const express = require("express");
 const router = express.Router();
+const db = require("../db"); // your MySQL pool/connection
 
-// Helper: Get user_id from username
-async function getUserId(username) {
-    const [rows] = await pool.query(
-        "SELECT id FROM users WHERE username = ?",
-        [username]
-    );
-
-    if (rows.length === 0) return null;
-    return rows[0].id;
-}
-
-// ------------------------------------------------------
-// GET PROGRESS
-// ------------------------------------------------------
 router.get("/progress", async (req, res) => {
-    const username = req.query.username;
+    const { username } = req.query;
 
-    if (!username) {
-        return res.status(400).json({ success: false, error: "Missing username" });
-    }
+    if (!username)
+        return res.json({ success: false, error: "Missing username" });
 
     try {
-        const userId = await getUserId(username);
-
-        if (!userId) {
-            return res.json({ success: false, error: "User not found" });
-        }
-
-        const [rows] = await pool.query(
-            "SELECT selected_character, current_villain_index, wins, losses FROM player_progress WHERE user_id = ?",
-            [userId]
+        const [rows] = await db.query(
+            "SELECT * FROM player_progress WHERE username = ?",
+            [username]
         );
 
         if (rows.length === 0) {
-            // No progress yet, create default
+            // Create default row if new player
+            await db.query(
+                `INSERT INTO player_progress 
+                (username, level, xp, xp_to_next, max_hp, max_mana, bonus_attack, bonus_health, bonus_mana, current_villain)
+                 VALUES (?, 1, 0, 100, 100, 100, 0, 0, 0, 0)`,
+                [username]
+            );
+
             return res.json({
                 success: true,
-                username,
-                selectedCharacter: "",
-                currentEnemy: 0,
-                wins: 0,
-                losses: 0
+                data: {
+                    username,
+                    level: 1,
+                    xp: 0,
+                    xp_to_next: 100,
+                    max_hp: 100,
+                    max_mana: 100,
+                    bonus_attack: 0,
+                    bonus_health: 0,
+                    bonus_mana: 0,
+                    current_villain: 0
+                }
             });
         }
 
-        const row = rows[0];
-
-        res.json({
-            success: true,
-            username,
-            selectedCharacter: row.selected_character,
-            currentEnemy: row.current_villain_index,
-            wins: row.wins,
-            losses: row.losses
-        });
+        return res.json({ success: true, data: rows[0] });
 
     } catch (err) {
-        console.error("Error loading progress:", err);
-        res.status(500).json({ success: false, error: "Server error" });
+        console.error(err);
+        res.json({ success: false, error: err.message });
     }
 });
 
-// ------------------------------------------------------
-// SAVE PROGRESS
-// ------------------------------------------------------
-router.post("/save-progress", async (req, res) => {
-    const { username, wins, losses, currentEnemy, selectedCharacter } = req.body;
+router.post("/progress", async (req, res) => {
+    const data = req.body;
 
-    if (!username) {
-        return res.status(400).json({ success: false, error: "Missing username" });
-    }
+    if (!data.username)
+        return res.json({ success: false, error: "Missing username" });
 
     try {
-        const userId = await getUserId(username);
-
-        if (!userId) {
-            return res.json({ success: false, error: "User not found" });
-        }
-
-        await pool.query(
-            `UPDATE player_progress
-             SET selected_character = ?, wins = ?, losses = ?, current_villain_index = ?, last_updated = NOW()
-             WHERE user_id = ?`,
-            [selectedCharacter, wins, losses, currentEnemy, userId]
+        await db.query(
+            `INSERT INTO player_progress
+            (username, level, xp, xp_to_next, max_hp, max_mana, bonus_attack, bonus_health, bonus_mana, current_villain)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON DUPLICATE KEY UPDATE
+                level = VALUES(level),
+                xp = VALUES(xp),
+                xp_to_next = VALUES(xp_to_next),
+                max_hp = VALUES(max_hp),
+                max_mana = VALUES(max_mana),
+                bonus_attack = VALUES(bonus_attack),
+                bonus_health = VALUES(bonus_health),
+                bonus_mana = VALUES(bonus_mana),
+                current_villain = VALUES(current_villain)
+            `,
+            [
+                data.username,
+                data.level,
+                data.xp,
+                data.xp_to_next,
+                data.max_hp,
+                data.max_mana,
+                data.bonus_attack,
+                data.bonus_health,
+                data.bonus_mana,
+                data.current_villain
+            ]
         );
 
         res.json({ success: true });
 
     } catch (err) {
-        console.error("Error saving progress:", err);
-        res.status(500).json({ success: false, error: "Server error" });
+        console.error(err);
+        res.json({ success: false, error: err.message });
     }
 });
 
-export default router;
