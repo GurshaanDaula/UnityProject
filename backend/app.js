@@ -17,7 +17,7 @@ app.use(express.json());
 // CORS
 app.use(
     cors({
-        origin: ["http://localhost:3001", "https://unityproject2.onrender.com"],
+        origin: ["https://unityproject2.onrender.com"],
         credentials: true,
     })
 );
