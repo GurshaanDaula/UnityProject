@@ -6,82 +6,104 @@
   <title>DBZ Battle Arena</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <link rel="icon" href="TemplateData/favicon.ico" />
-  <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@300;700&display=swap" rel="stylesheet">
-
   <style>
     body {
       margin: 0;
       background: #000;
-      font-family: "Oxanium", sans-serif;
       overflow-x: hidden;
+      font-family: Arial, sans-serif;
     }
 
-    /* ------------------ HOMEPAGE ------------------ */
+    /* ------------------------------------------
+           HOMEPAGE
+        ------------------------------------------ */
     #homepage {
       position: absolute;
       inset: 0;
-      background: url("https://i.imgur.com/7UN4JdZ.gif") center/cover no-repeat;
+      background: url("https://media1.giphy.com/media/l3V0lsGtTMSB5YNgc/giphy.gif") center/cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      text-align: center;
       z-index: 20;
-      transition: opacity 0.8s ease-in-out;
+      transition: opacity .8s ease-in-out;
     }
 
     #homepageTitle {
-      color: #ffcc00;
-      font-size: 52px;
-      text-shadow: 0 0 22px #ff3300, 0 0 12px #ff3300;
-      margin-bottom: 30px;
-      animation: glowTitle 1.7s infinite alternate;
+      color: #ffe600;
+      font-size: 58px;
+      font-weight: bold;
+      text-shadow: 0 0 25px orange, 0 0 45px red;
+      animation: titlePulse 1.7s infinite alternate ease-in-out;
     }
 
-    @keyframes glowTitle {
-      from {
-        text-shadow: 0 0 10px #ffcc00;
+    @keyframes titlePulse {
+      0% {
+        transform: scale(1);
+        text-shadow: 0 0 15px orange;
       }
 
-      to {
-        text-shadow: 0 0 32px #ff3300;
+      100% {
+        transform: scale(1.08);
+        text-shadow: 0 0 35px red;
+      }
+    }
+
+    #gokuAura {
+      width: 280px;
+      margin-top: 20px;
+      animation: float 2.5s ease-in-out infinite alternate;
+      filter: drop-shadow(0px 0px 25px #ffea00);
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0px);
+      }
+
+      100% {
+        transform: translateY(-12px);
       }
     }
 
     .homeButton {
-      padding: 15px 40px;
-      margin: 12px;
-      font-size: 22px;
-      font-weight: 700;
-      background: linear-gradient(to right, #ffcc00, #ff6600);
+      margin-top: 20px;
+      padding: 18px 45px;
+      font-size: 24px;
+      font-weight: bold;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, #ffe600, #ff8400);
       cursor: pointer;
       color: #000;
-      box-shadow: 0 0 12px #ff9900;
-      transition: transform 0.15s ease, box-shadow 0.2s;
+      box-shadow: 0 0 15px #ff9d00;
+      transition: transform .15s, box-shadow .25s;
     }
 
     .homeButton:hover {
-      transform: scale(1.07);
-      box-shadow: 0 0 22px #ffcc00;
+      transform: scale(1.08);
+      box-shadow: 0 0 28px #ffd700;
     }
 
-    /* ------------------ GAME LAYOUT ------------------ */
+    /* ------------------------------------------
+           NAVBAR
+        ------------------------------------------ */
     #navbar {
       width: 100%;
       height: 70px;
-      background: linear-gradient(to right, #ff9900, #ff3300);
-      display: flex;
+      background: linear-gradient(to right, #ff9d00, #ff3b00);
+      display: none;
       align-items: center;
       justify-content: center;
+      font-size: 28px;
       color: #fff;
-      font-size: 26px;
-      font-weight: 700;
-      text-shadow: 0 0 10px #000;
+      text-shadow: 0 0 10px black;
+      z-index: 5;
     }
 
+    /* ------------------------------------------
+           GAME WRAPPER
+        ------------------------------------------ */
     #pageWrapper {
       width: 100%;
       display: flex;
@@ -93,27 +115,26 @@
       width: 960px;
       height: 540px;
       background: #111;
-      border: 4px solid #ffcc00;
       border-radius: 10px;
-      box-shadow: 0 0 25px #ffcc00aa;
+      border: 4px solid #ffcc00;
+      box-shadow: 0 0 20px #ffcc0099;
       position: relative;
-      overflow: hidden;
     }
 
     canvas {
       width: 960px;
       height: 540px;
       display: none;
-      /* Hidden until Start Game */
     }
 
-    /* ------------------ LOADING SCREEN ------------------ */
+    /* ------------------------------------------
+           LOADING OVERLAY
+        ------------------------------------------ */
     #loadingOverlay {
       position: absolute;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, .85);
       display: none;
-      /* also hidden until Start Game */
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -122,32 +143,29 @@
 
     #loadingTitle {
       font-size: 32px;
-      margin-bottom: 20px;
-      color: #ffcc00;
-      text-shadow: 0 0 12px #ff3300;
+      color: #ffe600;
+      text-shadow: 0 0 15px orange;
     }
 
     #loadingBar {
+      margin-top: 20px;
       width: 70%;
       height: 20px;
-      border: 2px solid #ffcc00;
-      border-radius: 10px;
-      background: #222;
-      overflow: hidden;
-      margin-top: 10px;
+      border: 2px solid #ffe600;
+      border-radius: 12px;
     }
 
     #loadingFill {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, #ffcc00, #ff3300);
-      transition: width 0.2s;
+      background: linear-gradient(90deg, #ffe600, #ff3b00);
+      transition: width .25s;
     }
 
     #loadingPercent {
-      margin-top: 12px;
-      font-size: 18px;
-      color: #fff;
+      margin-top: 10px;
+      font-size: 20px;
+      color: white;
     }
 
     @media (max-width: 1000px) {
@@ -166,23 +184,21 @@
 
 <body>
 
-  <!-- HOMEPAGE -->
+  <!-- ---------------- HOMEPAGE ---------------- -->
   <div id="homepage">
-    <div id="homepageTitle">⚡ Dragon Ball Z – Battle Arena ⚡</div>
+    <div id="homepageTitle">⚡ DBZ Battle Arena ⚡</div>
+
+    <img id="gokuAura" src="https://i.imgur.com/il8ZcJ1.png" />
 
     <button class="homeButton" onclick="startGame()">Start Game</button>
-    <button class="homeButton">How to Play</button>
-    <button class="homeButton">Credits</button>
   </div>
 
-  <!-- NAVBAR (HIDDEN UNTIL GAME START) -->
-  <div id="navbar" style="display: none;">
-    ⚡ DBZ Battle Arena ⚡
-  </div>
+  <!-- ---------------- NAVBAR ---------------- -->
+  <div id="navbar">DBZ Battle Arena</div>
 
+  <!-- ---------------- GAME CANVAS ---------------- -->
   <div id="pageWrapper">
     <div id="gameWrapper">
-
       <div id="loadingOverlay">
         <div id="loadingTitle">Charging Ki...</div>
         <div id="loadingBar">
@@ -190,22 +206,43 @@
         </div>
         <div id="loadingPercent">0%</div>
       </div>
-
       <canvas id="unity-canvas"></canvas>
     </div>
   </div>
 
+  <!-- UNITY LOADER -->
   <script src="Build/public.loader.js"></script>
 
   <script>
     let unityStarted = false;
 
+    /* -------------------------
+       SOUND EFFECTS (embedded)
+    -------------------------- */
+
+    // POWER UP (looping aura sound)
+    const powerUpSound = new Audio("data:audio/wav;base64,UklGRoQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YYQAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA=");
+    powerUpSound.loop = true;
+
+    // START BUTTON SOUND (Kamehameha whoosh)
+    const startBlastSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAABErAAACABAAZGF0YSQAAAAAgICAkJCQkZGRkpKSk5OTlJSUlZWV");
+
+    /* -------------------------
+       START GAME
+    -------------------------- */
     function startGame() {
       if (unityStarted) return;
-
       unityStarted = true;
 
-      // Fade homepage
+      // Play aura sound
+      powerUpSound.volume = 0.35;
+      powerUpSound.play();
+
+      // Play "start" blast SFX
+      startBlastSound.volume = 0.9;
+      startBlastSound.play();
+
+      // Fade homepage out
       const home = document.getElementById("homepage");
       home.style.opacity = "0";
       setTimeout(() => home.style.display = "none", 800);
@@ -213,7 +250,7 @@
       // Show navbar
       document.getElementById("navbar").style.display = "flex";
 
-      // Show loading screen
+      // Show loader
       const loadingOverlay = document.getElementById("loadingOverlay");
       const canvas = document.getElementById("unity-canvas");
       loadingOverlay.style.display = "flex";
@@ -222,24 +259,24 @@
       const loadingFill = document.getElementById("loadingFill");
       const loadingPercent = document.getElementById("loadingPercent");
 
-      // Unity boot
+      // Boot Unity instance
       createUnityInstance(canvas, {
         dataUrl: "Build/public.data.br",
         frameworkUrl: "Build/public.framework.js.br",
         codeUrl: "Build/public.wasm.br",
-        streamingAssetsUrl: "StreamingAssets",
-        companyName: "Daula Inc.",
+        companyName: "DefaultCompany",
         productName: "DBZ-Battle_Game",
         productVersion: "1.0",
-        decompressionFallback: "true"
+        streamingAssetsUrl: "StreamingAssets",
+        decompressionFallback: true
       }, (progress) => {
         loadingFill.style.width = `${progress * 100}%`;
         loadingPercent.textContent = Math.round(progress * 100) + "%";
       }).then(() => {
+        // Stop aura sound once Unity starts
+        powerUpSound.pause();
         loadingOverlay.style.display = "none";
-      }).catch((err) => {
-        console.error(err);
-      });
+      }).catch(err => console.error(err));
     }
   </script>
 
