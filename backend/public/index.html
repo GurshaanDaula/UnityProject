@@ -15,74 +15,69 @@
     }
 
     /* ------------------------------------------
-           HOMEPAGE
+           HOMEPAGE (Minimal / Stylish / No Images)
         ------------------------------------------ */
     #homepage {
       position: absolute;
       inset: 0;
-      background: url("https://media1.giphy.com/media/l3V0lsGtTMSB5YNgc/giphy.gif") center/cover;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      background: linear-gradient(130deg, #0a0a0a, #1a1a1a, #000000);
+      animation: bgShift 6s infinite alternate ease-in-out;
       z-index: 20;
-      transition: opacity .8s ease-in-out;
+      transition: opacity .7s ease-in-out;
+    }
+
+    @keyframes bgShift {
+      0% {
+        background: linear-gradient(130deg, #0a0a0a, #111, #000);
+      }
+
+      100% {
+        background: linear-gradient(130deg, #000, #1a1a1a, #0a0a0a);
+      }
     }
 
     #homepageTitle {
-      color: #ffe600;
-      font-size: 58px;
+      color: #ffdd55;
+      font-size: 52px;
       font-weight: bold;
-      text-shadow: 0 0 25px orange, 0 0 45px red;
-      animation: titlePulse 1.7s infinite alternate ease-in-out;
+      text-shadow: 0 0 20px #ff8800, 0 0 45px #ff5500;
+      animation: titleGlow 2s infinite alternate ease-in-out;
+      letter-spacing: 2px;
     }
 
-    @keyframes titlePulse {
+    @keyframes titleGlow {
       0% {
+        text-shadow: 0 0 15px #ff8800;
         transform: scale(1);
-        text-shadow: 0 0 15px orange;
       }
 
       100% {
-        transform: scale(1.08);
-        text-shadow: 0 0 35px red;
-      }
-    }
-
-    #gokuAura {
-      width: 280px;
-      margin-top: 20px;
-      animation: float 2.5s ease-in-out infinite alternate;
-      filter: drop-shadow(0px 0px 25px #ffea00);
-    }
-
-    @keyframes float {
-      0% {
-        transform: translateY(0px);
-      }
-
-      100% {
-        transform: translateY(-12px);
+        text-shadow: 0 0 30px #ffaa00;
+        transform: scale(1.05);
       }
     }
 
     .homeButton {
-      margin-top: 20px;
-      padding: 18px 45px;
-      font-size: 24px;
+      margin-top: 25px;
+      padding: 15px 40px;
+      font-size: 22px;
       font-weight: bold;
       border: none;
-      border-radius: 10px;
-      background: linear-gradient(90deg, #ffe600, #ff8400);
+      border-radius: 8px;
+      background: linear-gradient(90deg, #ffdd55, #ff9b00);
       cursor: pointer;
       color: #000;
-      box-shadow: 0 0 15px #ff9d00;
+      box-shadow: 0 0 12px #ff990099;
       transition: transform .15s, box-shadow .25s;
     }
 
     .homeButton:hover {
-      transform: scale(1.08);
-      box-shadow: 0 0 28px #ffd700;
+      transform: scale(1.07);
+      box-shadow: 0 0 22px #ffbb00cc;
     }
 
     /* ------------------------------------------
@@ -91,13 +86,14 @@
     #navbar {
       width: 100%;
       height: 70px;
-      background: linear-gradient(to right, #ff9d00, #ff3b00);
+      background: linear-gradient(to right, #ff9900, #ff6600);
       display: none;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 26px;
+      font-weight: bold;
       color: #fff;
-      text-shadow: 0 0 10px black;
+      text-shadow: 0 0 8px #000;
       z-index: 5;
     }
 
@@ -128,7 +124,7 @@
     }
 
     /* ------------------------------------------
-           LOADING OVERLAY
+           LOADING OVERLAY (Minimal)
         ------------------------------------------ */
     #loadingOverlay {
       position: absolute;
@@ -142,29 +138,29 @@
     }
 
     #loadingTitle {
-      font-size: 32px;
-      color: #ffe600;
-      text-shadow: 0 0 15px orange;
+      font-size: 28px;
+      color: #ffdd55;
+      text-shadow: 0 0 12px #ff8800;
     }
 
     #loadingBar {
       margin-top: 20px;
       width: 70%;
       height: 20px;
-      border: 2px solid #ffe600;
-      border-radius: 12px;
+      border: 2px solid #ffdd55;
+      border-radius: 10px;
     }
 
     #loadingFill {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, #ffe600, #ff3b00);
+      background: linear-gradient(90deg, #ffdd55, #ff8800);
       transition: width .25s;
     }
 
     #loadingPercent {
       margin-top: 10px;
-      font-size: 20px;
+      font-size: 18px;
       color: white;
     }
 
@@ -186,10 +182,7 @@
 
   <!-- ---------------- HOMEPAGE ---------------- -->
   <div id="homepage">
-    <div id="homepageTitle">⚡ DBZ Battle Arena ⚡</div>
-
-    <img id="gokuAura" src="https://i.imgur.com/il8ZcJ1.png" />
-
+    <div id="homepageTitle">DBZ Battle Arena</div>
     <button class="homeButton" onclick="startGame()">Start Game</button>
   </div>
 
@@ -200,12 +193,13 @@
   <div id="pageWrapper">
     <div id="gameWrapper">
       <div id="loadingOverlay">
-        <div id="loadingTitle">Charging Ki...</div>
+        <div id="loadingTitle">Loading...</div>
         <div id="loadingBar">
           <div id="loadingFill"></div>
         </div>
         <div id="loadingPercent">0%</div>
       </div>
+
       <canvas id="unity-canvas"></canvas>
     </div>
   </div>
@@ -216,41 +210,16 @@
   <script>
     let unityStarted = false;
 
-    /* -------------------------
-       SOUND EFFECTS (embedded)
-    -------------------------- */
-
-    // POWER UP (looping aura sound)
-    const powerUpSound = new Audio("data:audio/wav;base64,UklGRoQAAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0YYQAAACAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA=");
-    powerUpSound.loop = true;
-
-    // START BUTTON SOUND (Kamehameha whoosh)
-    const startBlastSound = new Audio("data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAIlYAABErAAACABAAZGF0YSQAAAAAgICAkJCQkZGRkpKSk5OTlJSUlZWV");
-
-    /* -------------------------
-       START GAME
-    -------------------------- */
     function startGame() {
       if (unityStarted) return;
       unityStarted = true;
 
-      // Play aura sound
-      powerUpSound.volume = 0.35;
-      powerUpSound.play();
-
-      // Play "start" blast SFX
-      startBlastSound.volume = 0.9;
-      startBlastSound.play();
-
-      // Fade homepage out
       const home = document.getElementById("homepage");
       home.style.opacity = "0";
-      setTimeout(() => home.style.display = "none", 800);
+      setTimeout(() => home.style.display = "none", 700);
 
-      // Show navbar
       document.getElementById("navbar").style.display = "flex";
 
-      // Show loader
       const loadingOverlay = document.getElementById("loadingOverlay");
       const canvas = document.getElementById("unity-canvas");
       loadingOverlay.style.display = "flex";
@@ -259,7 +228,6 @@
       const loadingFill = document.getElementById("loadingFill");
       const loadingPercent = document.getElementById("loadingPercent");
 
-      // Boot Unity instance
       createUnityInstance(canvas, {
         dataUrl: "Build/public.data.br",
         frameworkUrl: "Build/public.framework.js.br",
@@ -273,8 +241,6 @@
         loadingFill.style.width = `${progress * 100}%`;
         loadingPercent.textContent = Math.round(progress * 100) + "%";
       }).then(() => {
-        // Stop aura sound once Unity starts
-        powerUpSound.pause();
         loadingOverlay.style.display = "none";
       }).catch(err => console.error(err));
     }
