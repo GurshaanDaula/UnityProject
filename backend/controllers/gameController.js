@@ -53,7 +53,7 @@ export async function updateProgress(req, res) {
         await pool.query(
             `UPDATE player_progress
              SET selected_character = ?,
-                 current_villan = ?,
+                 current_villain = ?,
                  level = ?,
                  xp = ?,
                  xp_to_next = ?,

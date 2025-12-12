@@ -50,7 +50,7 @@ export async function registerUser(req, res) {
         await pool.query(
             `INSERT INTO player_progress 
             (user_id, username, level, xp, xp_to_next, max_hp, max_mana,
-             bonus_attack, bonus_health, bonus_mana, current_villan, selected_character)
+             bonus_attack, bonus_health, bonus_mana, current_villain, selected_character)
              VALUES (?, ?, 1, 0, 100, 100, 100, 0, 0, 0, 0, NULL)`,
             [newUserId, username]
         );
