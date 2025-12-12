@@ -3,14 +3,16 @@ import pool from "../config/db.js";
 
 // password validation
 function validatePassword(pw) {
+    if (!pw || typeof pw !== "string") return false;
+
     return (
         pw.length >= 10 &&
-        /[A-Z]/.test(pw) &&
         /[a-z]/.test(pw) &&
-        /\d/.test(pw) &&
-        /[^A-Za-z0-9]/.test(pw)
+        /[A-Z]/.test(pw) &&
+        /[0-9]/.test(pw)
     );
 }
+
 
 export async function registerUser(req, res) {
     const { username, password } = req.body;
